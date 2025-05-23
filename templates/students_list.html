@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}All Students{% endblock %}
+{% block content %}
+<h1>All Students</h1>
+
+<a class="btn btn-success mb-3" href="/add-student">Add New Student</a>
+
+<form method="GET" action="/students-list" class="mb-3">
+  <div class="input-group">
+    <input type="text" name="q" value="{{ request.args.get('q', '') }}" class="form-control" placeholder="Search...">
+    <button class="btn btn-primary" type="submit">Filter</button>
+  </div>
+</form>
+
+<table class="table table-bordered table-striped">
+  <thead class="table-dark">
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Roll Number</th>
+      <th>Email</th>
+      <th>Added Time (IST)</th>
+      <th>Attendance %</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for student in students %}
+    <tr>
+      <td>{{ student.id }}</td>
+      <td>{{ student.name }}</td>
+      <td>{{ student.roll_number }}</td>
+      <td>{{ student.email }}</td>
+     <td>{{ student.ist_time.strftime('%d-%b-%Y %I:%M %p') }}</td>
+
+      <td>{{ student_percentages[student.id] }}%</td>
+      <td>
+        <a class="btn btn-sm btn-warning" href="/edit-student/{{ student.id }}">Edit</a>
+        <a class="btn btn-sm btn-danger" href="/delete-student/{{ student.id }}" onclick="return confirm('Are you sure?');">Delete</a>
+        <a class="btn btn-sm btn-info" href="/attendance/student/{{ student.id }}">Show Attendance</a>
+        <a class="btn btn-sm btn-success" href="/attendance-settings">Mark Attendance</a>
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+<a class="btn btn-secondary" href="/">Back to Home</a>
+{% endblock %}

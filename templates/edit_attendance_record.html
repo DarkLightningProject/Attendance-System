@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Edit Attendance{% endblock %}
+{% block content %}
+<div class="container" style="max-width: 600px;">
+  <div class="card shadow-sm mt-4">
+    <div class="card-body">
+      <h4 class="card-title mb-3">
+        Edit Attendance for <span class="text-primary">{{ record.student.name }}</span>
+        <small class="text-muted">({{ record.date }})</small>
+      </h4>
+
+      <form method="POST">
+        <div class="mb-3">
+          <label class="form-label">Status</label>
+          <select name="status" class="form-select" required>
+            <option value="Present" {% if record.status == 'Present' %}selected{% endif %}>Present</option>
+            <option value="Absent" {% if record.status == 'Absent' %}selected{% endif %}>Absent</option>
+            <option value="Pending" {% if record.status == 'Pending' %}selected{% endif %}>Pending</option>
+          </select>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center">
+          <button type="submit" class="btn btn-primary">Update</button>
+          <a href="{{ url_for('attendance_by_student', student_id=record.student_id) }}" class="btn btn-outline-secondary">Back</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

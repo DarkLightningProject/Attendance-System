@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Attendance for {{ student.name }}{% endblock %}
+{% block content %}
+<div class="container" style="max-width: 700px;">
+  <h1 class="mb-4">Attendance for {{ student.name }} <small class="text-muted">({{ student.roll_number }})</small></h1>
+
+  <table class="table table-bordered table-striped align-middle">
+    <thead class="table-dark">
+      <tr>
+        <th>Date</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for rec in records %}
+      <tr>
+        <td>{{ rec.date }}</td>
+        <td>
+          {% if rec.status == "Present" %}
+            <span class="badge bg-success">Present</span>
+          {% elif rec.status == "Absent" %}
+            <span class="badge bg-warning text-dark">Absent</span>
+          {% else %}
+            <span class="badge bg-secondary">Pending</span>
+          {% endif %}
+        </td>
+        <td>
+          <form method="POST" action="/delete-attendance-record/{{ rec.id }}" style="display:inline;">
+            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this attendance record?');">Remove</button>
+          </form>
+          <a class="btn btn-sm btn-primary ms-2" href="/edit-attendance-record/{{ rec.id }}">Edit</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <a class="btn btn-secondary" href="/students-list">Back to Students List</a>
+</div>
+{% endblock %}

@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% block title %}Attendance Settings & Marking{% endblock %}
+{% block content %}
+<div class="container" style="max-width: 1000px;">
+  <h1 class="mb-4">Attendance Settings &amp; Marking</h1>
+
+  {% if message %}
+    <div class="alert alert-success">{{ message }}</div>
+  {% endif %}
+
+  <!-- Semester Settings Form -->
+  <form method="POST" class="mb-4 p-3 border rounded bg-white shadow-sm">
+    <input type="hidden" name="update_settings" value="1">
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label class="form-label">Semester Start Date:</label>
+        <input type="date" name="start_date" value="{{ settings.start_date }}" class="form-control" required>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Semester End Date:</label>
+        <input type="date" name="end_date" value="{{ settings.end_date }}" class="form-control" required>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Update Semester Dates</button>
+  </form>
+
+  <!-- Holiday Management -->
+  <div class="mb-4 p-3 border rounded bg-white shadow-sm">
+    <h5 class="mb-3">Holidays</h5>
+    <form method="POST" class="row g-3 align-items-end">
+      <div class="col-md-4">
+        <label class="form-label mb-0">Holiday Date:</label>
+        <input type="date" name="holiday_date" class="form-control" required>
+      </div>
+      <div class="col-md-5">
+        <label class="form-label mb-0">Description:</label>
+        <input type="text" name="description" class="form-control">
+      </div>
+      <div class="col-md-3">
+        <button type="submit" name="add_holiday" value="1" class="btn btn-info">Add Holiday</button>
+      </div>
+    </form>
+
+    <ul class="list-group mt-3">
+      {% if holidays %}
+        {% for h in holidays %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <span><b>{{ h.date }}</b>{% if h.description %} - {{ h.description }}{% endif %}</span>
+            <form method="POST" style="display:inline;">
+              <button type="submit" name="remove_holiday" value="{{ h.id }}" class="btn btn-sm btn-danger"
+                onclick="return confirm('Remove this holiday?');">Remove</button>
+            </form>
+          </li>
+        {% endfor %}
+      {% else %}
+        <li class="list-group-item">No holidays set.</li>
+      {% endif %}
+    </ul>
+  </div>
+
+  <hr class="my-4">
+
+  {% if not settings.start_date or not settings.end_date %}
+    <div class="alert alert-danger">Please set semester start and end dates to mark attendance.</div>
+  {% elif is_holiday_today %}
+    <div class="alert alert-warning">Today ({{ today }}) is marked as a holiday. Attendance marking is disabled.</div>
+  {% else %}
+    <!-- Mark Attendance Table -->
+    <form method="POST">
+      <input type="hidden" name="mark_attendance" value="1">
+      <table class="table table-bordered table-striped align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Roll Number</th>
+            <th>Present (%)</th>
+            <th>Today</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for student in students %}
+          <tr>
+            <td>{{ student.id }}</td>
+            <td>{{ student.name }}</td>
+            <td>{{ student.roll_number }}</td>
+            <td>{{ percentages[student.id] }}%</td>
+            <td>
+              {% if todays_attendance.get(student.id) == "Present" %}
+                <span class="badge bg-success">Present</span>
+              {% elif todays_attendance.get(student.id) == "Absent" %}
+                <span class="badge bg-warning text-dark">Absent</span>
+              {% elif todays_attendance.get(student.id) == "Pending" %}
+                <span class="badge bg-secondary">Pending</span>
+              {% else %}
+                <span class="text-muted">Not marked</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if todays_attendance.get(student.id) == "Pending" or not todays_attendance.get(student.id) %}
+                <button type="submit" name="attendance_{{ student.id }}" value="Present" class="btn btn-success btn-sm">Present</button>
+                <button type="submit" name="attendance_{{ student.id }}" value="Absent" class="btn btn-warning btn-sm ms-1">Absent</button>
+              {% else %}
+                <span class="text-muted">-</span>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </form>
+  {% endif %}
+
+  <a class="btn btn-secondary mt-4" href="/">Back to Home</a>
+</div>
+{% endblock %}

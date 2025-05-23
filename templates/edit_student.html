@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Edit Student{% endblock %}
+{% block content %}
+<div class="container" style="max-width: 500px;">
+  <h1 class="mb-4">Edit Student</h1>
+  <form method="POST">
+    <div class="mb-3">
+      <label class="form-label">Name:</label>
+      <input type="text" name="name" value="{{ student.name }}" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Roll Number:</label>
+      <input type="text" name="roll_number" value="{{ student.roll_number }}" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Email:</label>
+      <input type="email" name="email" value="{{ student.email }}" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Update Student</button>
+  </form>
+  {% if message %}
+    <div class="alert alert-success mt-3">{{ message }}</div>
+  {% endif %}
+  <a class="btn btn-secondary mt-3" href="/students-list">Back to Students List</a>
+</div>
+{% endblock %}

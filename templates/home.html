@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<div class="container" style="max-width: 600px;">
+  <div class="text-center mt-5">
+    <h1 class="mb-4">Student Attendance Management System</h1>
+    <div class="list-group mb-4">
+      <a href="/add-student" class="list-group-item list-group-item-action list-group-item-success fw-bold">
+        ➕ Add Student (Web Form)
+      </a>
+      <a href="/students-list" class="list-group-item list-group-item-action list-group-item-info fw-bold">
+        📋 Show All Students
+      </a>
+      <a href="/attendance-settings" class="list-group-item list-group-item-action list-group-item-warning fw-bold">
+        🗓️ Attendance Settings &amp; Marking
+      </a>
+    </div>
+    <div class="alert alert-secondary">
+      <strong>Tip:</strong> You can also test API endpoints using Postman or cURL.
+    </div>
+  </div>
+</div>
+{% endblock %}
