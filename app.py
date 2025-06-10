@@ -338,7 +338,7 @@ def attendance_settings():
                                 student_id=student.id, date=today_str
                             ).first()
                             if existing:
-                                if existing.status == "Pending":
+                               
                                     existing.status = status  # update pending
                             else:
                                 record = Attendance(
